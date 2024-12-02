@@ -1,0 +1,12 @@
+Flask
+selenium
+pandas
+numpy
+xlsxwriter
+nest_asyncio
+gunicorn
+flask-cors
+pyperclip
+flask-sqlalchemy
+mysql-connector-python
+werkzeug

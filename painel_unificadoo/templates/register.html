@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </div>
+        <!-- Register Form -->
+        <div class="form-container">
+            <h1>Registrar</h1>
+            <form action="{{ url_for('register') }}" method="POST" id="register-form">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Registrar</button>
+            </form>
+            <p><a href="{{ url_for('login') }}">Voltar para Login</a></p>
+        </div>
+    </div>
+
+    <!-- Pop-up -->
+    <div id="notification" class="notification {{ popup.type if popup else '' }} {{ 'show' if popup else '' }}">
+        {{ popup.message if popup else '' }}
+    </div>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const notification = document.getElementById('notification');
+            if (notification && notification.classList.contains('show')) {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 5000); // O aviso desaparece após 5 segundos
+            }
+        });
+    </script>
+    
+</body>
+</html>

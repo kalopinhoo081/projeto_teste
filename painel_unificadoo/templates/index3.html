@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Systembot</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Logomarca -->
+        <div class="logo">
+            <img src="/static/images/logo.png" alt="Logomarca" class="logo-img">
+        </div>
+
+        <!-- Título do Projeto -->
+        <h1>Consulta de reembolso</h1>
+
+        <!-- Configuração do Sistema -->
+        <form id="configurar-form" class="form">
+            <label for="site-url" class="label">Digite o URL do site:</label>
+            <input type="url" id="site-url" name="site_url" placeholder="https://exemplo.com" class="input-url" required>
+            <button type="submit" class="btn">Configurar Sistema</button>
+        </form>
+        <p id="config-status" class="status"></p>
+
+        <!-- Botões de Controle -->
+        <div class="control-buttons">
+            <button id="iniciar" class="btn">Iniciar o Login no Sistema</button>
+            <button id="reiniciar" class="btn">Reiniciar Consulta</button>
+        </div>
+
+        <!-- Barra lateral -->
+        <div class="sidebar">
+            <a href="http://127.0.0.1:5002" class="nav-button active">Dados de promoção</a>
+            <a href="http://127.0.0.1:5001/index2" class="nav-button">Dados de Usuário</a>
+            <a href="http://127.0.0.1:5003/index3" class="nav-button">Dados de Reembolso</a>
+        </div>
+        <p id="status" class="status"></p>
+
+        <!-- Seleção de Tipo de Consulta -->
+        <div class="toggle-container">
+            <label>
+                <input type="radio" name="toggle" id="toggle-ids" checked>
+                IDs
+            </label>
+            <label>
+                <input type="radio" name="toggle" id="toggle-usernames">
+                Nomes de Usuários
+            </label>
+        </div>
+
+        <!-- Formulário de Consulta -->
+        <form id="consulta-form" action="/consultar" method="post" class="form">
+            <textarea name="consulta" rows="10" cols="50" placeholder="Cole os dados aqui, um por linha..." class="textarea"></textarea>
+            <br>
+            <button type="submit" class="btn">Consultar</button>
+        </form>
+
+        <!-- Barra de Progresso -->
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+
+        <!-- Botão de Download -->
+        <button id="download" class="btn" style="display: none;">Baixar Resultado</button>
+
+        <div class="header">
+            <button onclick="window.location.href='http://127.0.0.1:5000';" class="logout">Logout</button>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            Desenvolvido para consultas automatizadas eficientes.
+        </div>
+    </div>
+
+    <!-- Pop-up de Notificação -->
+    <div id="popup" class="popup">
+        <p id="popup-message"></p>
+        <button id="popup-close" class="btn">Fechar</button>
+    </div>
+
+    <script>
+        let consultaTipo = "ids"; // Padrão é IDs
+
+        // Alterna entre IDs e Nomes de Usuários
+        document.getElementById("toggle-ids").addEventListener("change", () => {
+            consultaTipo = "ids";
+            document.querySelector("textarea").placeholder = "Cole os IDs aqui, um por linha...";
+        });
+
+        document.getElementById("toggle-usernames").addEventListener("change", () => {
+            consultaTipo = "usernames";
+            document.querySelector("textarea").placeholder = "Cole os nomes de usuários aqui, um por linha...";
+        });
+
+        // Configura a URL do sistema
+        document.getElementById("configurar-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const siteUrl = document.getElementById("site-url").value;
+            const formData = new FormData();
+            formData.append("site_url", siteUrl);
+
+            const response = await fetch("/configurar", { method: "POST", body: formData });
+            const result = await response.json();
+            document.getElementById("config-status").innerText = result.message || result.error;
+        });
+
+        // Inicia o login no sistema
+        document.getElementById("iniciar").addEventListener("click", async () => {
+            const response = await fetch("/iniciar");
+            const result = await response.json();
+            document.getElementById("status").innerText = result.message || result.error;
+        });
+
+        // Reinicia o processo
+        document.getElementById("reiniciar").addEventListener("click", async () => {
+            const response = await fetch("/reiniciar");
+            const result = await response.json();
+            document.getElementById("status").innerText = result.message || result.error;
+            document.getElementById("download").style.display = "none"; // Oculta o botão de download
+        });
+
+        // Envia os dados e inicia a consulta
+        const form = document.getElementById("consulta-form");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            formData.append("tipo", consultaTipo);
+
+            const response = await fetch("/consultar", { method: "POST", body: formData });
+            const result = await response.json();
+
+            if (result.message) {
+                showPopup(result.message); // Exibe o pop-up com a mensagem
+                document.getElementById("download").style.display = "block"; // Exibe o botão de download
+            } else if (result.error) {
+                showPopup(result.error); // Exibe o pop-up com mensagem de erro
+            }
+
+            // Atualizar a barra de progresso
+            const progressBar = document.getElementById("progress-bar");
+            const updateProgress = async () => {
+                const response = await fetch("/progress");
+                const progress = await response.json();
+                const percentage = (progress.current / progress.total) * 100;
+                progressBar.style.width = `${percentage}%`;
+
+                if (progress.current < progress.total) {
+                    setTimeout(updateProgress, 500);
+                }
+            };
+            updateProgress();
+        });
+
+        // Botão para download do resultado
+        document.getElementById("download").addEventListener("click", () => {
+            window.location.href = "/download";
+        });
+
+        // Seleciona todos os botões de navegação
+        const navButtons = document.querySelectorAll('.nav-button');
+
+        // Obtém o caminho atual da URL
+        const currentPath = window.location.pathname;
+
+        // Adiciona a classe 'active' ao botão correspondente
+        navButtons.forEach(button => {
+            const buttonPath = new URL(button.href).pathname;
+            if (buttonPath === currentPath) {
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+            }
+        });
+
+        // Exibe o pop-up
+        function showPopup(message) {
+            const popup = document.getElementById("popup");
+            const popupMessage = document.getElementById("popup-message");
+            popupMessage.innerText = message;
+            popup.style.display = "block";
+
+            document.getElementById("popup-close").addEventListener("click", () => {
+                popup.style.display = "none";
+            });
+        }
+    </script>
+</body>
+</html>

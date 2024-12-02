@@ -1,0 +1,238 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Corpo da página */
+body {
+    background: #ffffff; /* Fundo cinza escuro */
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+  /* Botão de Logout */
+.logout {
+    position: fixed; /* Mantém o botão fixo na tela */
+    top: 10px; /* Distância do topo */
+    right: 10px; /* Distância da direita */
+    padding: 10px 15px;
+    border: 1px solid #303f9f;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #303f9f;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s;
+    z-index: 1000; /* Garante que o botão fique acima de outros elementos */
+}
+
+.logout:hover {
+    background-color: #4356c1;
+    transform: scale(1.05);
+}
+
+
+/* Gaveta lateral */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background: #303f9f;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.sidebar .nav-button {
+    padding: 15px;
+    margin: 10px 15px;
+    color: #ffffff; /* Amarelo */
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 3px;
+    text-align: left;
+    transition: background 0.3s ease, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar .nav-button:hover {
+    background-color: #ffffff80;
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.sidebar .nav-button svg {
+    width: 20px;
+    height: 20px;
+    fill: #4356c1;
+}
+
+.sidebar .nav-button.active {
+    background-color: #4356c1; /* Fundo cinza claro */
+    color: #ffffff; /* Texto branco */
+    font-weight: bold;
+    border-left: 4px solid #ffffff80; /* Destaque amarelo na esquerda */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Conteúdo principal */
+.main-content {
+    margin-left: 260px; /* Espaço para acomodar a sidebar */
+    padding: 20px;
+    width: calc(100% - 260px);
+    overflow-y: auto;
+}
+
+/* Contêiner principal */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff; /* Fundo levemente mais claro */
+    border-radius: 12px;
+}
+
+/* Título */
+h1 {
+    color: #000000; /* Amarelo vibrante */
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Logomarca */
+.logo {
+    height: 220px; /* Aumenta a altura */
+    width: 220px;  /* Aumenta a largura */
+    background: none;
+    margin: 0 auto 30px; /* Ajusta o espaçamento inferior */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Imagem da Logomarca */
+.logo-img {
+    height: 100%; /* Mantém o tamanho dentro da logomarca */
+    width: 100%;
+    object-fit: cover; /* Garante que a imagem preencha o espaço */
+    overflow: hidden; /* Esconde qualquer parte da imagem fora do círculo */
+}
+
+
+/* Botão */
+.btn {
+    background: #303f9f; /* Amarelo vibrante */
+    color: #ffffff; /* Texto escuro */
+    padding: 12px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.btn:hover {
+    background: #4356c1; /* Amarelo mais brilhante */
+    transform: scale(1.05); /* Pequeno zoom */
+}
+
+/* Campos de entrada */
+.input-url,
+.textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #303f9f;
+    border-radius: 3px;
+    background: #ffffff; /* Fundo cinza escuro */
+    color: #303f9f;
+    font-size: 14px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-url:focus,
+.textarea:focus {
+    border-color: #4356c1; /* Amarelo mais brilhante */
+    box-shadow: 0 0 8px #4356c1;
+    outline: none;
+}
+
+.textarea {
+    resize: none;
+    height: 120px;
+}
+
+/* Barra de progresso */
+.progress-container {
+    width: 100%;
+    background: #ddd;
+    border-radius: 8px;
+    height: 25px;
+    overflow: hidden;
+    margin-top: 20px;
+    position: relative;
+}
+
+.progress-bar {
+    width: 0;
+    height: 100%;
+    background: #303f9f;
+    transition: width 0.4s ease;
+}
+
+/* Rodapé */
+.footer {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #303f9f;
+    text-align: center;
+}
+
+/* Pop-up */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #2c3639;
+    color: #303f9f;
+    padding: 20px 30px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1000;
+    text-align: center;
+}
+
+.popup button {
+    margin-top: 10px;
+}
+
+/* Toggle */
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.toggle-container label {
+    color: #303f9f;
+    font-weight: bold;
+}
+
